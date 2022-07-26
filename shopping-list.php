@@ -14,8 +14,32 @@
         <h1 class="mt-4 text-center">Shopping List</h1>
         <?php 
 
+            if(!isset($_COOKIE['list'])) {
+                $list = array();
+                $list = json_encode($list, true);
+                setcookie("list", $list, time() + (86400*30), "shopping-list.php");
+                header("Location: shopping-list.php");
+            }
+
             if(isset($_GET['ideti'])) {
-            
+                if($_GET['item']!="") {
+                    $item=$_GET['item'];
+                    $newlist = $_COOKIE['list'];
+                    $newlistdecoded = json_decode($newlist, true);
+                    $newlistdecoded [] = $item;
+                    $newlist = json_encode($newlistdecoded, true);
+                    setcookie("list", $newlist, time() + (86400*30), "shopping-list.php");
+                    header("Location: shopping-list.php");
+                }
+            }
+
+            $list = json_decode($_COOKIE['list'], true);
+            foreach($list as $things){ 
+                echo $things."<form class='d-inline ms-2' method='GET' action='shopping-list.php'><button type='button' class='btn btn-danger' name='hi'>Ištrinti</button></form><br>";
+            }
+
+            if(isset($_GET["hi"])){
+                echo "hi";
             }
         ?>
         <p class="mb-0">Kokią prekę dėsime į krepšelį?</p>
