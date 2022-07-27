@@ -35,11 +35,16 @@
 
             $list = json_decode($_COOKIE['list'], true);
             foreach($list as $things){ 
-                echo $things."<form class='d-inline ms-2' method='GET' action='shopping-list.php'><button type='button' class='btn btn-danger' name='hi'>Ištrinti</button></form><br>";
-            }
-
-            if(isset($_GET["hi"])){
-                echo "hi";
+                echo $things."<form class='d-inline ms-2' method='GET' action='shopping-list.php'><button type='submit' class='btn btn-danger' name=".$things.">Ištrinti</button></form><br>";
+                
+                if(isset($_GET[$things])){
+                    $list = json_decode($_COOKIE['list'], true);
+                    $key = array_search($things, $list);
+                    unset($list[$key]);
+                    $newlist = json_encode($list, true);
+                    setcookie("list", $newlist, time() + (86400*30), "shopping-list.php");
+                    header("Location: shopping-list.php");
+                }
             }
         ?>
         <p class="mb-0">Kokią prekę dėsime į krepšelį?</p>
